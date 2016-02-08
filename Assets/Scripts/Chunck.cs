@@ -7,7 +7,7 @@ public class Chunck : MonoBehaviour
     public static float TILESIZE = 0.5f;
     public static float TILEHEIGHT = 0.2f;
     public static int CHUNCKSIZE = 32;
-    public bool set = false;
+    public bool meshIsSet = false;
     public int iPos { get; set; }
     public int jPos { get; set; }
     public int[] map { get; set; }
@@ -30,14 +30,19 @@ public class Chunck : MonoBehaviour
             blocks[i] = new Block();
             blocks[i].SetData(data.blocks[i]);
         }
+        this.transform.position = new Vector3(Chunck.TILESIZE * iPos * Chunck.CHUNCKSIZE, 0f, Chunck.TILESIZE * jPos * Chunck.CHUNCKSIZE);
     }
 
     public void SetMesh(Chunck[][] sideChuncks)
     {
         this.GetComponent<MeshFilter>().mesh = this.BuildMesh(sideChuncks);
         this.GetComponent<MeshCollider>().sharedMesh = this.GetComponent<MeshFilter>().mesh;
+        this.meshIsSet = true;
+    }
+
+    public void SetBlock()
+    {
         StartCoroutine(BrickManager.Instance.RequestBrickOn(this));
-        this.set = true;
     }
 
     public Mesh BuildMesh(Chunck[][] sideChuncks)

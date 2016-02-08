@@ -21,10 +21,9 @@ public class PlayerRebase : MonoBehaviour {
 	public float rotationSpeed;
 	public float camSensivity;
 
-    public int iPos;
-    public int jPos;
-
 	public Transform camTarget;
+    public Transform groundCursor;
+    public LayerMask layerGround;
 
 	private Rigidbody cRigidbody;
 	private Rigidbody CRigidbody {
@@ -72,7 +71,7 @@ public class PlayerRebase : MonoBehaviour {
 
 		if (PlayerRebase.mode == PlayerMode.Move) {
 			if (Input.GetKeyDown (KeyCode.E)) {
-				
+                StartCoroutine(RiseGround());
 			}
 		}
 
@@ -90,11 +89,35 @@ public class PlayerRebase : MonoBehaviour {
 		this.transform.RotateAround (this.transform.position, this.transform.up, rotation * rotationSpeed * Time.deltaTime);
 		this.transform.RotateAround (this.transform.position, Vector3.Cross (this.transform.up, Vector3.up), Vector3.Angle (Vector3.up, this.transform.up));
 
-        this.iPos = Mathf.FloorToInt(this.transform.position.x / (Chunck.CHUNCKSIZE * Chunck.TILESIZE));
-        this.jPos = Mathf.FloorToInt(this.transform.position.z / (Chunck.CHUNCKSIZE * Chunck.TILESIZE));
+        this.MoveGroundCursor();
 	}
 
-	public void OnGUI () {
-		GUILayout.TextArea (PlayerRebase.mode + "");
+	public void MoveGroundCursor () {
+        Ray r = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
+        RaycastHit hit;
+        if (Physics.Raycast(r, out hit, 100f, layerGround))
+        {
+            Chunck chunck = hit.collider.GetComponent<Chunck>();
+            if (chunck != null)
+            {
+                this.groundCursor.transform.position = new Vector3(Mathf.RoundToInt(hit.point.x * 2) / 2f, hit.point.y, Mathf.RoundToInt(hit.point.z * 2) / 2f);
+            }
+        }
 	}
+
+    IEnumerator RiseGround()
+    {
+        int i = Mathf.RoundToInt(this.groundCursor.transform.position.x * 2);
+        int j = Mathf.RoundToInt(this.groundCursor.transform.position.z * 2);
+        int iPos = i / Chunck.CHUNCKSIZE;
+        int jPos = j / Chunck.CHUNCKSIZE;
+        i = i % Chunck.CHUNCKSIZE;
+        j = j % Chunck.CHUNCKSIZE;
+
+        WWW request = new WWW("http://localhost:8080/levelTile/" + iPos + "/" + jPos + "/" + i + "/" + j + "/1/3");
+        yield return request;
+
+        ChunckManager.Query(iPos, jPos, 1);
+        ChunckManager.Query(iPos, jPos, 2);
+    }
 }
