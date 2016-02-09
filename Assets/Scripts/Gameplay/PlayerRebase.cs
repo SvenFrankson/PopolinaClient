@@ -114,7 +114,14 @@ public class PlayerRebase : MonoBehaviour {
         i = i % Chunck.CHUNCKSIZE;
         j = j % Chunck.CHUNCKSIZE;
 
-        WWW request = new WWW("http://localhost:8080/levelTile/" + iPos + "/" + jPos + "/" + i + "/" + j + "/1/3");
+        WWWForm param = new WWWForm();
+        param.AddField("iPos", iPos);
+        param.AddField("jPos", jPos);
+        param.AddField("i", i);
+        param.AddField("j", j);
+        param.AddField("step", 1);
+        param.AddField("size", 3);
+        WWW request = new WWW("http://localhost:8080/levelTile/", param);
         yield return request;
 
         ChunckManager.Query(iPos, jPos, 1);
