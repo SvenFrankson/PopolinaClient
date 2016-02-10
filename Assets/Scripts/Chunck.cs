@@ -113,13 +113,29 @@ public class Chunck : MonoBehaviour
         {
             for (int j = 0; j < CHUNCKSIZE; j++)
             {
-                trianglesList.Add(i + j * (CHUNCKSIZE + 1));
-                trianglesList.Add(i + 1 + (j + 1) * (CHUNCKSIZE + 1));
-                trianglesList.Add(i + 1 + j * (CHUNCKSIZE + 1));
+                float sqrDiag1 = (verticesList[i + j * (CHUNCKSIZE + 1)] + verticesList[i + 1 + (j + 1) * (CHUNCKSIZE + 1)]).sqrMagnitude;
+                float sqrDiag2 = (verticesList[i + 1 + j * (CHUNCKSIZE + 1)] + verticesList[i + (j + 1) * (CHUNCKSIZE + 1)]).sqrMagnitude;
 
-                trianglesList.Add(i + j * (CHUNCKSIZE + 1));
-                trianglesList.Add(i + (j + 1) * (CHUNCKSIZE + 1));
-                trianglesList.Add(i + 1 + (j + 1) * (CHUNCKSIZE + 1));
+                if (sqrDiag1 <= sqrDiag2)
+                {
+                    trianglesList.Add(i + j * (CHUNCKSIZE + 1));
+                    trianglesList.Add(i + 1 + (j + 1) * (CHUNCKSIZE + 1));
+                    trianglesList.Add(i + 1 + j * (CHUNCKSIZE + 1));
+
+                    trianglesList.Add(i + j * (CHUNCKSIZE + 1));
+                    trianglesList.Add(i + (j + 1) * (CHUNCKSIZE + 1));
+                    trianglesList.Add(i + 1 + (j + 1) * (CHUNCKSIZE + 1));
+                }
+                else
+                {
+                    trianglesList.Add(i + j * (CHUNCKSIZE + 1));
+                    trianglesList.Add(i + (j + 1) * (CHUNCKSIZE + 1));
+                    trianglesList.Add(i + 1 + j * (CHUNCKSIZE + 1));
+
+                    trianglesList.Add(i + 1 + (j + 1) * (CHUNCKSIZE + 1));
+                    trianglesList.Add(i + 1 + j * (CHUNCKSIZE + 1));
+                    trianglesList.Add(i + (j + 1) * (CHUNCKSIZE + 1));
+                }
             }
         }
 
