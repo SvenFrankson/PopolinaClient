@@ -35,7 +35,7 @@ public class Chunck : MonoBehaviour
 
     public void SetMesh(Chunck[][] sideChuncks)
     {
-        this.GetComponent<MeshFilter>().mesh = this.BuildMesh(sideChuncks);
+        this.GetComponent<MeshFilter>().mesh = this.BuildMesh();
         this.GetComponent<MeshCollider>().sharedMesh = this.GetComponent<MeshFilter>().mesh;
         this.meshIsSet = true;
     }
@@ -43,6 +43,89 @@ public class Chunck : MonoBehaviour
     public void SetBlock()
     {
         StartCoroutine(BrickManager.Instance.RequestBrickOn(this));
+    }
+
+    public Mesh BuildMesh()
+    {
+        Mesh m = new Mesh();
+        List<Vector3> verticesList = new List<Vector3>();
+        List<int> trianglesList = new List<int>();
+
+        for (int j = 0; j < CHUNCKSIZE; j++)
+        {
+            for (int i = 0; i < CHUNCKSIZE; i++)
+            {
+                Vector3 v1 = new Vector3(i * TILESIZE - TILESIZE / 2, map[i + CHUNCKSIZE * j] * TILEHEIGHT, j * TILESIZE - TILESIZE / 2);
+                Vector3 v2 = new Vector3(i * TILESIZE - TILESIZE / 2, map[i + CHUNCKSIZE * j] * TILEHEIGHT, j * TILESIZE + TILESIZE / 2);
+                Vector3 v3 = new Vector3(i * TILESIZE + TILESIZE / 2, map[i + CHUNCKSIZE * j] * TILEHEIGHT, j * TILESIZE + TILESIZE / 2);
+                Vector3 v4 = new Vector3(i * TILESIZE + TILESIZE / 2, map[i + CHUNCKSIZE * j] * TILEHEIGHT, j * TILESIZE - TILESIZE / 2);
+                Vector3 v5 = new Vector3(i * TILESIZE - TILESIZE / 2, -1 * TILEHEIGHT, j * TILESIZE - TILESIZE / 2);
+                Vector3 v6 = new Vector3(i * TILESIZE - TILESIZE / 2, -1 * TILEHEIGHT, j * TILESIZE + TILESIZE / 2);
+                Vector3 v7 = new Vector3(i * TILESIZE + TILESIZE / 2, -1 * TILEHEIGHT, j * TILESIZE + TILESIZE / 2);
+                Vector3 v8 = new Vector3(i * TILESIZE + TILESIZE / 2, -1 * TILEHEIGHT, j * TILESIZE - TILESIZE / 2);
+
+                verticesList.Add(v1);
+                verticesList.Add(v2);
+                verticesList.Add(v3);
+                verticesList.Add(v4);
+                trianglesList.Add(verticesList.Count - 4);
+                trianglesList.Add(verticesList.Count - 3);
+                trianglesList.Add(verticesList.Count - 2);
+                trianglesList.Add(verticesList.Count - 4);
+                trianglesList.Add(verticesList.Count - 2);
+                trianglesList.Add(verticesList.Count - 1);
+
+                verticesList.Add(v4);
+                verticesList.Add(v3);
+                verticesList.Add(v7);
+                verticesList.Add(v8);
+                trianglesList.Add(verticesList.Count - 4);
+                trianglesList.Add(verticesList.Count - 3);
+                trianglesList.Add(verticesList.Count - 2);
+                trianglesList.Add(verticesList.Count - 4);
+                trianglesList.Add(verticesList.Count - 2);
+                trianglesList.Add(verticesList.Count - 1);
+
+                verticesList.Add(v3);
+                verticesList.Add(v2);
+                verticesList.Add(v6);
+                verticesList.Add(v7);
+                trianglesList.Add(verticesList.Count - 4);
+                trianglesList.Add(verticesList.Count - 3);
+                trianglesList.Add(verticesList.Count - 2);
+                trianglesList.Add(verticesList.Count - 4);
+                trianglesList.Add(verticesList.Count - 2);
+                trianglesList.Add(verticesList.Count - 1);
+
+                verticesList.Add(v2);
+                verticesList.Add(v1);
+                verticesList.Add(v5);
+                verticesList.Add(v6);
+                trianglesList.Add(verticesList.Count - 4);
+                trianglesList.Add(verticesList.Count - 3);
+                trianglesList.Add(verticesList.Count - 2);
+                trianglesList.Add(verticesList.Count - 4);
+                trianglesList.Add(verticesList.Count - 2);
+                trianglesList.Add(verticesList.Count - 1);
+
+                verticesList.Add(v1);
+                verticesList.Add(v4);
+                verticesList.Add(v8);
+                verticesList.Add(v5);
+                trianglesList.Add(verticesList.Count - 4);
+                trianglesList.Add(verticesList.Count - 3);
+                trianglesList.Add(verticesList.Count - 2);
+                trianglesList.Add(verticesList.Count - 4);
+                trianglesList.Add(verticesList.Count - 2);
+                trianglesList.Add(verticesList.Count - 1);
+            }
+        }
+
+        m.vertices = verticesList.ToArray();
+        m.triangles = trianglesList.ToArray();
+        m.RecalculateNormals();
+
+        return m;
     }
 
     public Mesh BuildMesh(Chunck[][] sideChuncks)
@@ -100,6 +183,7 @@ public class Chunck : MonoBehaviour
         Mesh m = new Mesh();
         List<Vector3> verticesList = new List<Vector3>();
         List<int> trianglesList = new List<int>();
+        List<Vector3> normalsList = new List<Vector3>();
 
         for (int j = 0; j < CHUNCKSIZE + 1; j++)
         {
@@ -139,9 +223,25 @@ public class Chunck : MonoBehaviour
             }
         }
 
+        for (int j = 0; j < CHUNCKSIZE + 1; j++)
+        {
+            for (int i = 0; i < CHUNCKSIZE + 1; i++)
+            {
+                Vector3 v1 = new Vector3(1, extendedMap[i + 2][j + 1] - extendedMap[i + 1][j + 1], 0);
+                Vector3 v2 = new Vector3(0, extendedMap[i + 1][j + 2] - extendedMap[i + 1][j + 1], 1);
+                Vector3 v3 = new Vector3(-1, extendedMap[i][j + 1] - extendedMap[i + 1][j + 1], 0);
+                Vector3 v4 = new Vector3(0, extendedMap[i + 1][j] - extendedMap[i + 1][j + 1], -1);
+
+                Vector3 n1 = Vector3.Cross(v2, v1).normalized;
+                Vector3 n2 = Vector3.Cross(v4, v3).normalized;
+
+                normalsList.Add((n1 + n2).normalized);
+            }
+        }
+
         m.vertices = verticesList.ToArray();
         m.triangles = trianglesList.ToArray();
-        m.RecalculateNormals();
+        m.normals = normalsList.ToArray();
 
         return m;
     }

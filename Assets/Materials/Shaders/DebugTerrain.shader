@@ -1,9 +1,7 @@
 ﻿Shader "Popolina/DebugTerrain" {
 	Properties {
-		_LineColor ("Line Color", Color) = (0,0,0,0)
-		_LineSize ("Line Size", Float) = 1
-		_GroundSize ("Ground Size", Int) = 10
 		_Ramp ("Height Ramp (RGB)", 2D) = "gray" {} 
+		_CliffColor ("Cliff Color", Color) = (0,0,0,0)
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
@@ -12,12 +10,11 @@
 		CGPROGRAM
 		#pragma surface surf Lambert
 
-		fixed4 _LineColor;
-		float _LineSize;
-		int _GroundSize;
 		sampler2D _Ramp;
+		fixed4 _CliffColor;
 
 		struct Input {
+			float3 worldNormal;
 			float3 worldPos;
 		};
 
@@ -25,6 +22,9 @@
 			fixed4 c = (0,0,0,0);
 			half d = IN.worldPos.y / 205;
 			c.rgb = tex2D (_Ramp, float2(d,d)).rgb;
+			if (IN.worldNormal.y < .5) {
+				c = _CliffColor;
+			}
 			o.Albedo = c.rgb;
 			o.Alpha = c.a;
 		}
