@@ -33,14 +33,14 @@ public class MeshSerializer : EditorWindow
         {
             trianglesString += mesh.triangles[i] + ", ";
         }
-        trianglesString.Remove(trianglesString.Length - 2, 2);
+        trianglesString = trianglesString.Remove(trianglesString.Length - 2, 2);
         trianglesString += "], ";
         string verticesString = "\"vertices\" : [";
         for (int i = 0; i < mesh.vertices.Length; i++)
         {
             verticesString += mesh.vertices[i].x.ToString("0.00") + ", " + mesh.vertices[i].y.ToString("0.00") + ", " + mesh.vertices[i].z.ToString("0.00") + ", ";
         }
-        verticesString.Remove(verticesString.Length - 2, 2);
+        verticesString = verticesString.Remove(verticesString.Length - 2, 2);
         verticesString += "]";
         jsonString += trianglesString;
         jsonString += verticesString;

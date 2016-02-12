@@ -71,7 +71,7 @@ public class PlayerRebase : MonoBehaviour {
 
 		if (PlayerRebase.mode == PlayerMode.Move) {
 			if (Input.GetKeyDown (KeyCode.E)) {
-                StartCoroutine(RiseGround());
+                StartCoroutine(AddRamp());
 			}
 		}
 
@@ -126,5 +126,21 @@ public class PlayerRebase : MonoBehaviour {
 
         ChunckManager.Query(iPos, jPos, 1);
         ChunckManager.Query(iPos, jPos, 2);
+    }
+
+    IEnumerator AddRamp()
+    {
+        WWWForm param = new WWWForm();
+        param.AddField("iPos", 1);
+        param.AddField("jPos", 1);
+        param.AddField("i", 16);
+        param.AddField("j", 16);
+        param.AddField("k", 290);
+        param.AddField("dir", 0);
+        param.AddField("reference", "rampS");
+        WWW request = new WWW("http://localhost:8080/addBrick/", param);
+        yield return request;
+
+        Debug.Log(request.text);
     }
 }
