@@ -25,6 +25,8 @@ public class PlayerRebase : MonoBehaviour {
     public Transform groundCursor;
     public LayerMask layerGround;
 
+    public List<string> bricks;
+
 	private Rigidbody cRigidbody;
 	private Rigidbody CRigidbody {
 		get {
@@ -71,8 +73,16 @@ public class PlayerRebase : MonoBehaviour {
 
 		if (PlayerRebase.mode == PlayerMode.Move) {
 			if (Input.GetKeyDown (KeyCode.E)) {
-                StartCoroutine(AddRamp());
-			}
+                StartCoroutine(RiseGround(1));
+            }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                StartCoroutine(RiseGround(-1));
+            }
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                StartCoroutine(AddCube());
+            }
 		}
 
 		this.CAnimator.SetFloat ("Forward", this.speed / this.maxSpeed);
@@ -105,7 +115,7 @@ public class PlayerRebase : MonoBehaviour {
         }
 	}
 
-    IEnumerator RiseGround()
+    IEnumerator RiseGround(int h)
     {
         int i = Mathf.RoundToInt(this.groundCursor.transform.position.x * 2);
         int j = Mathf.RoundToInt(this.groundCursor.transform.position.z * 2);
@@ -119,28 +129,40 @@ public class PlayerRebase : MonoBehaviour {
         param.AddField("jPos", jPos);
         param.AddField("i", i);
         param.AddField("j", j);
-        param.AddField("step", 1);
+        param.AddField("h", h);
         param.AddField("size", 3);
         WWW request = new WWW("http://localhost:8080/levelTile/", param);
+
         yield return request;
 
         ChunckManager.Query(iPos, jPos, 1);
         ChunckManager.Query(iPos, jPos, 2);
     }
 
-    IEnumerator AddRamp()
+    IEnumerator AddCube()
     {
+        int i = Mathf.RoundToInt(this.groundCursor.transform.position.x * 2);
+        int j = Mathf.RoundToInt(this.groundCursor.transform.position.z * 2);
+        int k = Mathf.RoundToInt(this.groundCursor.transform.position.y * 5);
+        int iPos = i / Chunck.CHUNCKSIZE;
+        int jPos = j / Chunck.CHUNCKSIZE;
+        i = i % Chunck.CHUNCKSIZE;
+        j = j % Chunck.CHUNCKSIZE;
+
         WWWForm param = new WWWForm();
-        param.AddField("iPos", 1);
-        param.AddField("jPos", 1);
-        param.AddField("i", 16);
-        param.AddField("j", 16);
-        param.AddField("k", 290);
-        param.AddField("dir", 0);
-        param.AddField("reference", "rampS");
-        WWW request = new WWW("http://localhost:8080/addBrick/", param);
+        param.AddField("iPos", iPos);
+        param.AddField("jPos", jPos);
+        param.AddField("i", i);
+        param.AddField("j", j);
+        param.AddField("k", k);
+        param.AddField("d", 0);
+        param.AddField("reference", "cube");
+        param.AddField("texture", "wood");
+        WWW request = new WWW("http://localhost:8080/addBlock/", param);
+
         yield return request;
 
-        Debug.Log(request.text);
+        ChunckManager.Query(iPos, jPos, 1);
+        ChunckManager.Query(iPos, jPos, 3);
     }
 }

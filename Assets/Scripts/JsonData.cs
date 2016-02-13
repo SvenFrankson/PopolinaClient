@@ -6,7 +6,6 @@ using System.Collections.Generic;
 [Serializable]
 public class ChunckData 
 {
-
 	public int iPos;
 	public int jPos;
 	public int[] map;
@@ -21,6 +20,7 @@ public class BlockData
     public int kPos;
     public int dir;
     public string reference;
+    public string texture;
 }
 
 [Serializable]
@@ -28,5 +28,6 @@ public class BrickData
 {
     public string reference;
     public double[] vertices;
+    public double[] uvs;
     public double[] triangles;
 }

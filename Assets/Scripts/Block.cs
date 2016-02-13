@@ -11,6 +11,7 @@ public class Block
     public int kPos;
     public int dir;
     public string reference;
+    public string texture;
 
     public Block()
     {
@@ -24,5 +25,6 @@ public class Block
         kPos = data.kPos;
         dir = data.dir;
         reference = data.reference;
+        texture = data.texture;
     }
 }

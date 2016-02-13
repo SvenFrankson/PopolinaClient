@@ -11,7 +11,7 @@ public class Chunck : MonoBehaviour
     public int iPos { get; set; }
     public int jPos { get; set; }
     public int[] map { get; set; }
-    public Block[] blocks;
+    public Dictionary<string, List<Block>> texturedBlocks;
 
     public Chunck()
     {
@@ -24,16 +24,21 @@ public class Chunck : MonoBehaviour
         jPos = data.jPos;
         map = new int[CHUNCKSIZE * CHUNCKSIZE];
         data.map.CopyTo(map, 0);
-        blocks = new Block[data.blocks.Length];
-        for (int i = 0; i < blocks.Length; i++)
+        texturedBlocks = new Dictionary<string, List<Block>>();
+        for (int i = 0; i < data.blocks.Length; i++)
         {
-            blocks[i] = new Block();
-            blocks[i].SetData(data.blocks[i]);
+            var b = new Block();
+            b.SetData(data.blocks[i]);
+            if (!texturedBlocks.ContainsKey(b.texture))
+            {
+                texturedBlocks.Add(b.texture, new List<Block>());
+            }
+            texturedBlocks[b.texture].Add(b);
         }
         this.transform.position = new Vector3(Chunck.TILESIZE * iPos * Chunck.CHUNCKSIZE, 0f, Chunck.TILESIZE * jPos * Chunck.CHUNCKSIZE);
     }
 
-    public void SetMesh(Chunck[][] sideChuncks)
+    public void SetMesh(/*Chunck[][] sideChuncks*/)
     {
         this.GetComponent<MeshFilter>().mesh = this.BuildMesh();
         this.GetComponent<MeshCollider>().sharedMesh = this.GetComponent<MeshFilter>().mesh;
@@ -128,6 +133,7 @@ public class Chunck : MonoBehaviour
         return m;
     }
 
+    /*
     public Mesh BuildMesh(Chunck[][] sideChuncks)
     {
         int[][] extendedMap = new int[CHUNCKSIZE + 3][];
@@ -245,15 +251,33 @@ public class Chunck : MonoBehaviour
 
         return m;
     }
+    */
 
     public void BuildBlocks()
     {
-        foreach (Block b in blocks)
-        {
+        foreach (KeyValuePair<string, List<Block>> bs in texturedBlocks) {
+            string textureName = bs.Key;
+            List<Block> blocks = bs.Value;
+
+            CombineInstance[] blockParts = new CombineInstance[blocks.Count];
+
+            for (int i = 0; i < blocks.Count; i++)
+            {
+                Matrix4x4 matrix = new Matrix4x4();
+                Vector3 position = new Vector3(TILESIZE * blocks[i].iPos, TILEHEIGHT * blocks[i].kPos, TILESIZE * blocks[i].jPos);
+                Quaternion rotation = Quaternion.EulerAngles(0f, blocks[i].dir * 90f, 0f);
+                Vector3 scale = Vector3.one;
+                matrix.SetTRS(position, rotation, scale);
+                blockParts[i].transform = matrix;
+                blockParts[i].mesh = BrickManager.Instance.bricks[blocks[i].reference].mesh;
+            }
+
             GameObject newBlock = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             newBlock.transform.parent = this.transform;
-            newBlock.transform.localPosition = new Vector3(TILESIZE * b.iPos, TILEHEIGHT * b.kPos, TILESIZE * b.jPos);
-            newBlock.GetComponent<MeshFilter>().mesh = BrickManager.Instance.bricks[b.reference].mesh;
+            newBlock.transform.localPosition = Vector3.zero;
+            newBlock.transform.localRotation = Quaternion.identity;
+            newBlock.GetComponent<MeshFilter>().mesh.CombineMeshes(blockParts, true, true);
+            newBlock.GetComponent<Renderer>().material.mainTexture = BrickManager.Instance.textures[textureName];
         }
     }
 }

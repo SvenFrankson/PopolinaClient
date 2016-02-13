@@ -39,13 +39,16 @@ public class ChunckManager : MonoBehaviour
         {
             return;
         }
+        /*
         int i = newChunckData.iPos;
         int j = newChunckData.jPos;
+        */
         Chunck newChunck = Instantiate(Template);
         newChunck.SetData(newChunckData);
         chuncks.Add(newChunck);
         TrySetMesh(newChunck);
         newChunck.SetBlock();
+        /*
         for (int x = 0; x < 3; x++)
         {
             for (int y = 0; y < 3; y++)
@@ -54,6 +57,7 @@ public class ChunckManager : MonoBehaviour
                 TrySetMesh(side);
             }
         }
+        */
     }
 
     static public void UpdateChunckData(ChunckData chunckData)
@@ -68,7 +72,6 @@ public class ChunckManager : MonoBehaviour
 
     static public void UpdateChunckMesh(Chunck chunck)
     {
-        Debug.Log("Mesh Update Request 3");
         TrySetMesh(chunck);
     }
 
@@ -84,6 +87,7 @@ public class ChunckManager : MonoBehaviour
             return;
         }
 
+        /*
         int i = c.iPos;
         int j = c.jPos;
         Chunck[][] sideChuncks = new Chunck[3][];
@@ -99,7 +103,8 @@ public class ChunckManager : MonoBehaviour
                 }
             }
         }
-        c.SetMesh(sideChuncks);
+        */
+        c.SetMesh(/*sideChuncks*/);
     }
 
     public void Start()

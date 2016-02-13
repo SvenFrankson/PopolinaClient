@@ -15,6 +15,8 @@ ModelImporter:
     100014: rampL
     100016: rampM
     100018: rampS
+    100020: Point
+    100022: Point.001
     400000: //RootNode
     400002: cubeM
     400004: cubeS
@@ -25,6 +27,8 @@ ModelImporter:
     400014: rampL
     400016: rampM
     400018: rampS
+    400020: Point
+    400022: Point.001
     2300000: //RootNode
     2300002: cubeM
     2300004: cubeS

@@ -25,8 +25,16 @@ public class Brick
         {
             triangles[i] = Mathf.RoundToInt((float)data.triangles[i]);
         }
+
+        Vector2[] uvs = new Vector2[data.uvs.Length / 2];
+        for (int i = 0; i < uvs.Length; i++)
+        {
+            uvs[i] = new Vector2((float)data.uvs[2 * i], (float)data.uvs[2 * i + 1]);
+        }
+
         mesh.vertices = vertices;
         mesh.triangles = triangles;
+        mesh.uv = uvs;
         mesh.RecalculateNormals();
     }
 }

@@ -17,7 +17,7 @@ public class MeshSerializer : EditorWindow
     void OnGUI()
     {
         this.reference = EditorGUILayout.TextField("Reference", reference);
-        this.mesh = EditorGUILayout.ObjectField("Mesh", mesh, typeof(Mesh)) as Mesh;
+        this.mesh = EditorGUILayout.ObjectField("Mesh", mesh, typeof(Mesh), false) as Mesh;
         if (GUILayout.Button("Get JSON Format"))
         {
             output = CreateJSON(this.mesh);
@@ -35,6 +35,15 @@ public class MeshSerializer : EditorWindow
         }
         trianglesString = trianglesString.Remove(trianglesString.Length - 2, 2);
         trianglesString += "], ";
+
+        string uvsString = "\"uvs\" : [";
+        for (int i = 0; i < mesh.uv.Length; i++)
+        {
+            uvsString += mesh.uv[i].x.ToString("0.00") + ", " + mesh.uv[i].y.ToString("0.00") + ", ";
+        }
+        uvsString = uvsString.Remove(uvsString.Length - 2, 2);
+        uvsString += "], ";
+
         string verticesString = "\"vertices\" : [";
         for (int i = 0; i < mesh.vertices.Length; i++)
         {
@@ -42,10 +51,12 @@ public class MeshSerializer : EditorWindow
         }
         verticesString = verticesString.Remove(verticesString.Length - 2, 2);
         verticesString += "]";
+
         jsonString += trianglesString;
+        jsonString += uvsString;
         jsonString += verticesString;
         jsonString += "}";
 
-            return jsonString;
+        return jsonString;
     }
 }
