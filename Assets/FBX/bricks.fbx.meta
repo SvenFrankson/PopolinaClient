@@ -17,6 +17,14 @@ ModelImporter:
     100018: rampS
     100020: Point
     100022: Point.001
+    100024: cylindreFL
+    100026: cylindreFM
+    100028: cylindreFS
+    100030: cylindreL
+    100032: cylindreM
+    100034: cylindreS
+    100036: smoothbarFM
+    100038: smoothbarFS
     400000: //RootNode
     400002: cubeM
     400004: cubeS
@@ -29,6 +37,14 @@ ModelImporter:
     400018: rampS
     400020: Point
     400022: Point.001
+    400024: cylindreFL
+    400026: cylindreFM
+    400028: cylindreFS
+    400030: cylindreL
+    400032: cylindreM
+    400034: cylindreS
+    400036: smoothbarFM
+    400038: smoothbarFS
     2300000: //RootNode
     2300002: cubeM
     2300004: cubeS
@@ -39,6 +55,14 @@ ModelImporter:
     2300014: rampL
     2300016: rampM
     2300018: rampS
+    2300020: cylindreFL
+    2300022: cylindreFM
+    2300024: cylindreFS
+    2300026: cylindreL
+    2300028: cylindreM
+    2300030: cylindreS
+    2300032: smoothbarFM
+    2300034: smoothbarFS
     3300000: //RootNode
     3300002: cubeM
     3300004: cubeS
@@ -49,6 +73,14 @@ ModelImporter:
     3300014: rampL
     3300016: rampM
     3300018: rampS
+    3300020: cylindreFL
+    3300022: cylindreFM
+    3300024: cylindreFS
+    3300026: cylindreL
+    3300028: cylindreM
+    3300030: cylindreS
+    3300032: smoothbarFM
+    3300034: smoothbarFS
     4300000: Cube
     4300002: cubeM
     4300004: cubeS
@@ -59,6 +91,14 @@ ModelImporter:
     4300014: rampL
     4300016: rampM
     4300018: rampS
+    4300020: smoothbarFM
+    4300022: smoothbarFS
+    4300024: cylindreFS
+    4300026: cylindreFL
+    4300028: cylindreFM
+    4300030: cylindreM
+    4300032: cylindreL
+    4300034: cylindreS
   materials:
     importMaterials: 1
     materialName: 0
