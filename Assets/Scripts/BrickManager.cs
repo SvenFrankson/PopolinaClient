@@ -79,6 +79,6 @@ public class BrickManager : MonoBehaviour
                 Add(texture, newTexture);
             }
         }
-        chunck.BuildBlocks();
+        StartCoroutine(chunck.BuildBlocksAsync());
     }
 }

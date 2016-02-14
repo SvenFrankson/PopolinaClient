@@ -253,13 +253,14 @@ public class Chunck : MonoBehaviour
     }
     */
 
-    public void BuildBlocks()
+    public IEnumerator BuildBlocksAsync()
     {
-        foreach (KeyValuePair<string, List<Block>> bs in texturedBlocks) {
+        foreach (KeyValuePair<string, List<Block>> bs in texturedBlocks)
+        {
             string textureName = bs.Key;
             List<Block> blocks = bs.Value;
 
-            CombineInstance[] blockParts = new CombineInstance[blocks.Count];
+            List<CombineInstance> blockParts = new List<CombineInstance>();
 
             for (int i = 0; i < blocks.Count; i++)
             {
@@ -269,16 +270,32 @@ public class Chunck : MonoBehaviour
                 Quaternion rotation = Quaternion.AngleAxis(blocks[i].dir * 90f, Vector3.up);
                 Vector3 scale = Vector3.one;
                 matrix.SetTRS(position, rotation, scale);
-                blockParts[i].transform = matrix;
-                blockParts[i].mesh = BrickManager.Instance.bricks[blocks[i].reference].mesh;
+                CombineInstance blockPart = new CombineInstance();
+                blockPart.transform = matrix;
+                blockPart.mesh = BrickManager.Instance.bricks[blocks[i].reference].mesh;
+                blockParts.Add(blockPart);
+
+                if (blockParts.Count > 10)
+                {
+                    GameObject newBlock = GameObject.Instantiate(ChunckManager.BlockTemplate) as GameObject;
+                    newBlock.transform.parent = this.transform;
+                    newBlock.transform.localPosition = Vector3.zero;
+                    newBlock.transform.localRotation = Quaternion.identity;
+                    newBlock.GetComponent<MeshFilter>().mesh.CombineMeshes(blockParts.ToArray(), true, true);
+                    newBlock.GetComponent<Renderer>().material.mainTexture = BrickManager.Instance.textures[textureName];
+                    blockParts.Clear();
+                    yield return null;
+                }
             }
 
-            GameObject newBlock = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            newBlock.transform.parent = this.transform;
-            newBlock.transform.localPosition = Vector3.zero;
-            newBlock.transform.localRotation = Quaternion.identity;
-            newBlock.GetComponent<MeshFilter>().mesh.CombineMeshes(blockParts, true, true);
-            newBlock.GetComponent<Renderer>().material.mainTexture = BrickManager.Instance.textures[textureName];
+            GameObject lastBlock = GameObject.Instantiate(ChunckManager.BlockTemplate) as GameObject;
+            lastBlock.transform.parent = this.transform;
+            lastBlock.transform.localPosition = Vector3.zero;
+            lastBlock.transform.localRotation = Quaternion.identity;
+            lastBlock.GetComponent<MeshFilter>().mesh.CombineMeshes(blockParts.ToArray(), true, true);
+            lastBlock.GetComponent<Renderer>().material.mainTexture = BrickManager.Instance.textures[textureName];
+            blockParts.Clear();
+            yield return null;
         }
     }
 }

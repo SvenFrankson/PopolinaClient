@@ -28,6 +28,15 @@ public class ChunckManager : MonoBehaviour
         }
     }
 
+    public GameObject blockTemplate;
+    static public GameObject BlockTemplate
+    {
+        get
+        {
+            return Instance.blockTemplate;
+        }
+    }
+
     static public void Query(int i, int j, int update = 0)
     {
         queriedChuncks.Add(new int[] { i, j, update });
