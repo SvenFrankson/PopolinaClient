@@ -83,6 +83,10 @@ public class PlayerRebase : MonoBehaviour {
             {
                 StartCoroutine(AddCube());
             }
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                StartCoroutine(AddTree());
+            }
 		}
 
 		this.CAnimator.SetFloat ("Forward", this.speed / this.maxSpeed);
@@ -159,6 +163,32 @@ public class PlayerRebase : MonoBehaviour {
         param.AddField("reference", "cube");
         param.AddField("texture", "wood");
         WWW request = new WWW("http://localhost:8080/addBlock/", param);
+
+        yield return request;
+
+        ChunckManager.Query(iPos, jPos, 1);
+        ChunckManager.Query(iPos, jPos, 3);
+    }
+
+    IEnumerator AddTree()
+    {
+        int i = Mathf.RoundToInt(this.groundCursor.transform.position.x * 2);
+        int j = Mathf.RoundToInt(this.groundCursor.transform.position.z * 2);
+        int k = Mathf.RoundToInt(this.groundCursor.transform.position.y * 5);
+        int iPos = i / Chunck.CHUNCKSIZE;
+        int jPos = j / Chunck.CHUNCKSIZE;
+        i = i % Chunck.CHUNCKSIZE;
+        j = j % Chunck.CHUNCKSIZE;
+
+        WWWForm param = new WWWForm();
+        param.AddField("iPos", iPos);
+        param.AddField("jPos", jPos);
+        param.AddField("i", i);
+        param.AddField("j", j);
+        param.AddField("k", k);
+        param.AddField("d", 0);
+        param.AddField("reference", "tree1");
+        WWW request = new WWW("http://localhost:8080/addTemplate/", param);
 
         yield return request;
 

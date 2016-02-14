@@ -3,7 +3,6 @@ using UnityEditor;
 
 public class MeshSerializer : EditorWindow
 {
-    public string reference;
     public Mesh mesh;
     public string output;
 
@@ -16,7 +15,6 @@ public class MeshSerializer : EditorWindow
 
     void OnGUI()
     {
-        this.reference = EditorGUILayout.TextField("Reference", reference);
         this.mesh = EditorGUILayout.ObjectField("Mesh", mesh, typeof(Mesh), false) as Mesh;
         if (GUILayout.Button("Get JSON Format"))
         {
@@ -27,7 +25,7 @@ public class MeshSerializer : EditorWindow
 
     public string CreateJSON(Mesh mesh)
     {
-        string jsonString = "{ \"reference\" : \"" + reference + "\", ";
+        string jsonString = "{ \"reference\" : \"" + mesh.name + "\", ";
         string trianglesString = "\"triangles\" : [";
         for (int i = 0; i < mesh.triangles.Length; i++)
         {

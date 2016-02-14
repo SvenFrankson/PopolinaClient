@@ -265,7 +265,8 @@ public class Chunck : MonoBehaviour
             {
                 Matrix4x4 matrix = new Matrix4x4();
                 Vector3 position = new Vector3(TILESIZE * blocks[i].iPos, TILEHEIGHT * blocks[i].kPos, TILESIZE * blocks[i].jPos);
-                Quaternion rotation = Quaternion.EulerAngles(0f, blocks[i].dir * 90f, 0f);
+                Debug.Log(blocks[i].dir);
+                Quaternion rotation = Quaternion.AngleAxis(blocks[i].dir * 90f, Vector3.up);
                 Vector3 scale = Vector3.one;
                 matrix.SetTRS(position, rotation, scale);
                 blockParts[i].transform = matrix;
