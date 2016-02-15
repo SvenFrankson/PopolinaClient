@@ -18,8 +18,9 @@ public class BrickManager : MonoBehaviour
         }
     }
 
+    public Material templateMaterial;
     public Dictionary<string, Brick> bricks = new Dictionary<string, Brick>();
-    public Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
+    public Dictionary<string, Material> textures = new Dictionary<string, Material>();
 
     public void Add(Brick brick)
     {
@@ -28,7 +29,9 @@ public class BrickManager : MonoBehaviour
 
     public void Add(string textureName, Texture2D texture)
     {
-        textures.Add(textureName, texture);
+        Material newMat = new Material(templateMaterial);
+        newMat.mainTexture = texture;
+        textures.Add(textureName, newMat);
     }
 
     // Todo : Running this coroutine several times quickly will cause client to request several time the same mesh or texture. Solve it.

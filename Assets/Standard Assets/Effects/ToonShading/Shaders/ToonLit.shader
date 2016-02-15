@@ -1,4 +1,4 @@
-﻿Shader "Popolina/DebugTerrain" {
+Shader "Toon/Lit" {
 	Properties {
 		_Color ("Main Color", Color) = (0.5,0.5,0.5,1)
 		_MainTex ("Base (RGB)", 2D) = "white" {}
@@ -38,13 +38,10 @@ float4 _Color;
 
 struct Input {
 	float2 uv_MainTex : TEXCOORD0;
-	float3 worldPos;
 };
 
 void surf (Input IN, inout SurfaceOutput o) {
-
-	half d = IN.worldPos.y / 200;
-	half4 c = tex2D (_MainTex, float2(d,d)) * _Color;
+	half4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
 	o.Albedo = c.rgb;
 	o.Alpha = c.a;
 }

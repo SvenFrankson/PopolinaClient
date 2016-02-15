@@ -38,9 +38,9 @@ public class Chunck : MonoBehaviour
         this.transform.position = new Vector3(Chunck.TILESIZE * iPos * Chunck.CHUNCKSIZE, 0f, Chunck.TILESIZE * jPos * Chunck.CHUNCKSIZE);
     }
 
-    public void SetMesh(/*Chunck[][] sideChuncks*/)
+    public void SetMesh(Chunck[][] sideChuncks)
     {
-        this.GetComponent<MeshFilter>().mesh = this.BuildMesh();
+        this.GetComponent<MeshFilter>().mesh = this.BuildMesh(sideChuncks);
         this.GetComponent<MeshCollider>().sharedMesh = this.GetComponent<MeshFilter>().mesh;
         this.meshIsSet = true;
     }
@@ -133,7 +133,6 @@ public class Chunck : MonoBehaviour
         return m;
     }
 
-    /*
     public Mesh BuildMesh(Chunck[][] sideChuncks)
     {
         int[][] extendedMap = new int[CHUNCKSIZE + 3][];
@@ -251,7 +250,6 @@ public class Chunck : MonoBehaviour
 
         return m;
     }
-    */
 
     public IEnumerator BuildBlocksAsync()
     {
@@ -266,7 +264,6 @@ public class Chunck : MonoBehaviour
             {
                 Matrix4x4 matrix = new Matrix4x4();
                 Vector3 position = new Vector3(TILESIZE * blocks[i].iPos, TILEHEIGHT * blocks[i].kPos, TILESIZE * blocks[i].jPos);
-                Debug.Log(blocks[i].dir);
                 Quaternion rotation = Quaternion.AngleAxis(blocks[i].dir * 90f, Vector3.up);
                 Vector3 scale = Vector3.one;
                 matrix.SetTRS(position, rotation, scale);
@@ -275,14 +272,14 @@ public class Chunck : MonoBehaviour
                 blockPart.mesh = BrickManager.Instance.bricks[blocks[i].reference].mesh;
                 blockParts.Add(blockPart);
 
-                if (blockParts.Count > 10)
+                if (blockParts.Count > 30)
                 {
                     GameObject newBlock = GameObject.Instantiate(ChunckManager.BlockTemplate) as GameObject;
                     newBlock.transform.parent = this.transform;
                     newBlock.transform.localPosition = Vector3.zero;
                     newBlock.transform.localRotation = Quaternion.identity;
                     newBlock.GetComponent<MeshFilter>().mesh.CombineMeshes(blockParts.ToArray(), true, true);
-                    newBlock.GetComponent<Renderer>().material.mainTexture = BrickManager.Instance.textures[textureName];
+                    newBlock.GetComponent<Renderer>().sharedMaterial = BrickManager.Instance.textures[textureName];
                     blockParts.Clear();
                     yield return null;
                 }
@@ -293,7 +290,7 @@ public class Chunck : MonoBehaviour
             lastBlock.transform.localPosition = Vector3.zero;
             lastBlock.transform.localRotation = Quaternion.identity;
             lastBlock.GetComponent<MeshFilter>().mesh.CombineMeshes(blockParts.ToArray(), true, true);
-            lastBlock.GetComponent<Renderer>().material.mainTexture = BrickManager.Instance.textures[textureName];
+            lastBlock.GetComponent<Renderer>().sharedMaterial = BrickManager.Instance.textures[textureName];
             blockParts.Clear();
             yield return null;
         }
