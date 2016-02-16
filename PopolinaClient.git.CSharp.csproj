@@ -74,10 +74,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Materials\Shaders\DebugTerrain.shader" />
-    <None Include="Assets\Materials\Shaders\ToonTerrain.shader" />
-    <None Include="Assets\Materials\Shaders\ToonTerrainNCI.shader" />
-    <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularDisplacement.shader" />
-    <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularSmooth.shader" />
     <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasic.shader" />
     <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasicOutline.shader" />
     <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLit.shader" />
